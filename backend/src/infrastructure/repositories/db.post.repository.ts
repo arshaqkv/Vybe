@@ -13,7 +13,14 @@ export class DBPostRepository implements IPostRepository {
   async getAll(userId: number, offset: number, limit: number): Promise<Post[]> {
     const [rows] = await db.query(
       `
-    SELECT posts.*, users.name FROM posts
+    SELECT 
+      posts.*,
+      users.name,
+      EXISTS (
+        SELECT 1 FROM likes
+        WHERE likes.user_id = ? AND likes.post_id = posts.id
+      ) AS isLikedByCurrentUser
+    FROM posts
     JOIN users ON users.id = posts.user_id
     WHERE posts.user_id IN (
       SELECT following_id FROM follows WHERE follower_id = ?
@@ -23,9 +30,15 @@ export class DBPostRepository implements IPostRepository {
     ORDER BY posts.created_at DESC
     LIMIT ? OFFSET ?
     `,
-      [userId, userId, limit, offset]
+      [userId, userId, userId, limit, offset]
     );
-    return rows as Post[];
+
+    const posts = (rows as any[]).map((row) => ({
+      ...row,
+      isLikedByCurrentUser: Boolean(row.isLikedByCurrentUser), 
+    }));
+
+    return posts;
   }
 
   async count(): Promise<number> {

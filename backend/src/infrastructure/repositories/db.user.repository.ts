@@ -25,4 +25,31 @@ export class DBUserRepository implements IUserRepository {
     const users = rows as User[];
     return users[0] || null;
   }
+
+  async getAllUsersWithFollowStatus(
+    id: number
+  ): Promise<{ id: number; name: string; isFollowing: boolean }[]> {
+    const [rows] = await db.query(
+      `
+    SELECT 
+      u.id,
+      u.name,
+      EXISTS (
+        SELECT 1 FROM follows f 
+        WHERE f.follower_id = ? AND f.following_id = u.id
+      ) AS isFollowing
+    FROM users u
+    WHERE u.id != ?
+    `,
+      [id, id]
+    );
+
+    const users = (rows as any[]).map((user) => ({
+      id: user.id,
+      name: user.name,
+      isFollowing: Boolean(user.isFollowing),
+    }));
+
+    return users;
+  }
 }
