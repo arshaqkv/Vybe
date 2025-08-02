@@ -6,6 +6,7 @@ import { config } from "../config/config";
 import { errorHandler } from "../interface/middlewares/error.middleware";
 
 import { checkDBConnection } from "../infrastructure/database/db";
+import { authRoutes } from "../interface/routes/auth.routes";
 
 const app: Application = express();
 const PORT: number = config.PORT;
@@ -35,11 +36,13 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
+app.use("/api/auth", authRoutes);
+
 //error handling middleware
 app.use(errorHandler);
 
 //listen port
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
-  checkDBConnection()
+  checkDBConnection();
 });
