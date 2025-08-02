@@ -15,7 +15,7 @@ export class RefreshToken {
       throw new Error("User not found");
     }
 
-    const accessToken = generateAccessToken({ id: user._id });
+    const accessToken = generateAccessToken({ id: user.id });
     return accessToken;
   }
 }

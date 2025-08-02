@@ -57,7 +57,7 @@ class AuthController {
       });
 
       res
-        .status(200)
+        .status(HttpStatus.OK)
         .send({ success: true, message: "Logged out successfully" });
     } catch (error: any) {
       next(error);
@@ -73,7 +73,7 @@ class AuthController {
         await AuthDIContainer.getRefreshTokenUseCase().execute(refreshToken);
       res
         .cookie("accessToken", newAccessToken, accessCookieOptions)
-        .status(200)
+        .status(HttpStatus.OK)
         .json({ message: "Token refreshed" });
     } catch (error: any) {
       next(error);

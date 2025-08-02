@@ -6,6 +6,7 @@ class PostController {
   async createPost(req: Request, res: Response, next: NextFunction) {
     const id = parseInt(req.user.id);
     const { content } = req.body;
+
     try {
       await PostDIContainer.getCreatePostRepositoryUseCase().execute({
         content,
@@ -22,7 +23,8 @@ class PostController {
     const limit = parseInt(req.query.limit as string) || 10;
     try {
       const getAllPosts = PostDIContainer.getAllPostsUseCase();
-      const posts = getAllPosts.execute(page, limit);
+      const posts = await getAllPosts.execute(page, limit);
+      res.status(HttpStatus.OK).json(posts);
     } catch (error: any) {
       next(error);
     }
