@@ -12,11 +12,15 @@ import axios from "../api/axiosInstance";
 import { Heart, UserMinus } from "lucide-react";
 import toast from "react-hot-toast";
 import UserSuggestion from "../components/UserSuggestion";
+import Pagination from "../components/Pagination";
 
 export default function LandingPage() {
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState("");
   const [users, setUsers] = useState([]);
+  const [page, setPage] = useState(1);
+  const limit = 2;
+  const [totalPages, setTotalPages] = useState(1);
 
   const fetchSuggestions = async () => {
     try {
@@ -27,10 +31,13 @@ export default function LandingPage() {
     }
   };
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (pageNumber = 1) => {
     try {
-      const response = await axios.get("/post");
+      const response = await axios.get(
+        `/post?page=${pageNumber}&limit=${limit}`
+      );
       setPosts(response.data.data);
+      setTotalPages(response.data.pagination.totalPages);
     } catch (error) {
       toast.error("Error fetching posts");
       setPosts([]);
@@ -39,14 +46,16 @@ export default function LandingPage() {
 
   // 🔁 Fetch both users and posts (reused after follow/unfollow)
   const fetchAll = async () => {
-    await Promise.all([fetchSuggestions(), fetchPosts()]);
+    await Promise.all([fetchSuggestions(), fetchPosts(page)]);
   };
 
   useEffect(() => {
     fetchAll();
   }, []);
 
-  console.log(posts)
+  useEffect(() => {
+    fetchPosts(page);
+  }, [page]);
 
   const handleCreatePost = async () => {
     if (!newPost.trim()) return toast.error("Post cannot be empty");
@@ -145,6 +154,11 @@ export default function LandingPage() {
             ))}
           </div>
         )}
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onPageChange={(newPage) => setPage(newPage)}
+        />
       </div>
 
       {/* Sidebar: Who to follow */}
