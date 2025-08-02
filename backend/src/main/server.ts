@@ -7,6 +7,7 @@ import { errorHandler } from "../interface/middlewares/error.middleware";
 
 import { checkDBConnection } from "../infrastructure/database/db";
 import { authRoutes } from "../interface/routes/auth.routes";
+import { postRoutes } from "../interface/routes/post.routes";
 
 const app: Application = express();
 const PORT: number = config.PORT;
@@ -37,6 +38,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/post", postRoutes);
 
 //error handling middleware
 app.use(errorHandler);
