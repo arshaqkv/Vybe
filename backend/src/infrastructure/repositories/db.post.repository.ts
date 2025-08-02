@@ -12,7 +12,7 @@ export class DBPostRepository implements IPostRepository {
 
   async getAll(offset: number, limit: number): Promise<Post[]> {
     const [rows] = await db.query(
-      `SELECT posts.*, users.username FROM posts
+      `SELECT posts.*, users.name FROM posts
        JOIN users ON users.id = posts.user_id
        ORDER BY posts.created_at DESC
        LIMIT ? OFFSET ?`,
