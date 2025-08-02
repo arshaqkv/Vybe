@@ -20,4 +20,4 @@ const checkDBConnection = async () => {
   }
 };
 
-export { pool, checkDBConnection };
+export { pool as db, checkDBConnection };
