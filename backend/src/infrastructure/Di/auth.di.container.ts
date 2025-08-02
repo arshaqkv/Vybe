@@ -1,3 +1,4 @@
+import { GetUsers } from "../../application/use-cases/GetUsers";
 import { Login } from "../../application/use-cases/Login";
 import { RefreshToken } from "../../application/use-cases/RefreshToken";
 import { Signup } from "../../application/use-cases/Signup";
@@ -18,5 +19,9 @@ export class AuthDIContainer {
 
   static getRefreshTokenUseCase() {
     return new RefreshToken(this.getUserRepository());
+  }
+
+  static getUsersUseCase() {
+    return new GetUsers(this.getUserRepository());
   }
 }
