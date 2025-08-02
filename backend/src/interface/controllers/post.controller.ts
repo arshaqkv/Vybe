@@ -19,11 +19,13 @@ class PostController {
   }
 
   async getAllPosts(req: Request, res: Response, next: NextFunction) {
+
+    const userId = parseInt(req.user.id)
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     try {
       const getAllPosts = PostDIContainer.getAllPostsUseCase();
-      const posts = await getAllPosts.execute(page, limit);
+      const posts = await getAllPosts.execute(userId, page, limit);
       res.status(HttpStatus.OK).json(posts);
     } catch (error: any) {
       next(error);

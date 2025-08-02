@@ -10,13 +10,20 @@ export class DBPostRepository implements IPostRepository {
     ]);
   }
 
-  async getAll(offset: number, limit: number): Promise<Post[]> {
+  async getAll(userId: number, offset: number, limit: number): Promise<Post[]> {
     const [rows] = await db.query(
-      `SELECT posts.*, users.name FROM posts
-       JOIN users ON users.id = posts.user_id
-       ORDER BY posts.created_at DESC
-       LIMIT ? OFFSET ?`,
-      [limit, offset]
+      `
+    SELECT posts.*, users.name FROM posts
+    JOIN users ON users.id = posts.user_id
+    WHERE posts.user_id IN (
+      SELECT following_id FROM follows WHERE follower_id = ?
+      UNION
+      SELECT ?
+    )
+    ORDER BY posts.created_at DESC
+    LIMIT ? OFFSET ?
+    `,
+      [userId, userId, limit, offset]
     );
     return rows as Post[];
   }
