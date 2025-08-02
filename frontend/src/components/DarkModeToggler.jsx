@@ -1,0 +1,17 @@
+import { useDarkMode } from "../context/ThemeContext";
+import { Moon, SunMedium } from "lucide-react";
+import React from "react";
+
+const DarkModeToggler = () => {
+  const { darkMode, setDarkMode } = useDarkMode();
+  return (
+    <button
+      onClick={() => setDarkMode(!darkMode)}
+      className="bg-gray-200 dark:bg-gray-800 rounded-full p-3 cursor-pointer hover:text-blue-300 dark:hover:text-yellow-600"
+    >
+      {darkMode ? <SunMedium size={18} /> : <Moon size={18} />}
+    </button>
+  );
+};
+
+export default DarkModeToggler;
