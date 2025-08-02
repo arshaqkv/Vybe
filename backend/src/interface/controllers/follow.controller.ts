@@ -4,12 +4,12 @@ import { HttpStatus } from "../../utils/http.status";
 
 class FollowController {
   async toggleFollowPost(req: Request, res: Response, next: NextFunction) {
-    const postId = parseInt(req.params.id);
-    const userId = parseInt(req.user?.id);
+    const followerId = parseInt(req.user?.id);
+    const followingId = parseInt(req.params.id);
     try {
-      const toggleLike = FollowDIContainer.getToggleFollowUsecase();
-      const status = await toggleLike.execute(userId, postId);
-      res.status(HttpStatus.OK).json({ message: `Post ${status}` });
+      const toggleFollow = FollowDIContainer.getToggleFollowUsecase();
+      const status = await toggleFollow.execute(followerId, followingId);
+      res.status(HttpStatus.CREATED).json({ message: `User ${status}` });
     } catch (error: any) {
       next(error);
     }

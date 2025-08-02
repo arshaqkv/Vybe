@@ -1,6 +1,6 @@
+import { ToggleFollow } from "../../application/use-cases/ToggleFollow";
 import { ToggleLikePost } from "../../application/use-cases/ToggleLikePost";
 import { DBFollowRepository } from "../repositories/db.follow.repository";
-import { DBLikeRepository } from "../repositories/db.like.repository";
 
 export class FollowDIContainer {
   static getFollowRepository() {
@@ -8,6 +8,6 @@ export class FollowDIContainer {
   }
 
   static getToggleFollowUsecase() {
-    return new ToggleLikePost(this.getToggleFollowUsecase());
+    return new ToggleFollow(this.getFollowRepository());
   }
 }
