@@ -4,10 +4,11 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { config } from "../config/config";
 import { errorHandler } from "../interface/middlewares/error.middleware";
-
 import { checkDBConnection } from "../infrastructure/database/db";
+
 import { authRoutes } from "../interface/routes/auth.routes";
 import { postRoutes } from "../interface/routes/post.routes";
+import { followRoutes } from "../interface/routes/follow.routes";
 
 const app: Application = express();
 const PORT: number = config.PORT;
@@ -37,8 +38,10 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
+//routes
 app.use("/api/auth", authRoutes);
 app.use("/api/post", postRoutes);
+app.use("/api/user", followRoutes);
 
 //error handling middleware
 app.use(errorHandler);
